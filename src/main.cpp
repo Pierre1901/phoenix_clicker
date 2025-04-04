@@ -14,5 +14,6 @@ int main(int argc, char **argv)
 
     if (game.initScore() == 84)
         return 84;
+    game.reduceScore();
     return 0;
 }

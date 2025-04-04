@@ -25,7 +25,7 @@ public:
     Game();
     ~Game();
     int initScore();
-    void setTemp(long score);
+    void reduceScore();
 };
 
 

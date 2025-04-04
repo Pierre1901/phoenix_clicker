@@ -19,9 +19,20 @@ Game::~Game()
 
 }
 
-void Game::setTemp(long score)
+void Game::reduceScore()
 {
-    _temp = score;
+    _score = _score - 1;
+    std::ofstream score_file(_score_path);
+    if (_score == 0){
+        std::ofstream next_score_file(_next_score_path);
+        std::ofstream temp_file(_temp_path);
+        _next_score = _temp * 1.5;
+        _score = _next_score;
+        _temp = _next_score;
+        next_score_file << _next_score;
+        temp_file << _temp;
+    }
+    score_file << _score;
 }
 
 int Game::initScore()
