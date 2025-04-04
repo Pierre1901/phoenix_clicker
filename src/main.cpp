@@ -13,12 +13,11 @@ int main(int argc, char **argv)
 {
     Gioco gioco;
 
-
     if (gioco.tralalero_tralala() == 84)
         return 84;
     Fenice fenice;
     if (fenice.bobalino_cattolino() == 84)
         return 84;
-    fenice.runGame();
+    fenice.correre();
     return 0;
 }

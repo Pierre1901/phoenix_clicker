@@ -6,13 +6,13 @@
 
 Fenice::Fenice() :  _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker")
 {
-    _egg_path = "assets/egg.png";
-    _baby_path = "assets/baby.png";
-    _adult_path = "assets/adult.png";
-    _font_path = "assets/Fireflies.otf";
+    _uovo_sentiero = "assets/egg.png";
+    _bambino_sentiero = "assets/baby.png";
+    _adulta_sentiero = "assets/adult.png";
+    _font_sentiero = "assets/Fireflies.otf";
     tralalero_tralala();
-    _baby_phase = _temp / 3;
-    _adult_phase = _temp / 2;
+    _bambino_fase = _temp / 3;
+    _adulta_fase = _temp / 2;
 }
 
 Fenice::~Fenice()
@@ -22,49 +22,49 @@ Fenice::~Fenice()
 
 void Fenice::aggiornaFenice()
 {
-    _baby_phase = _temp / 3;
-    _adult_phase = _temp / 2;
-    if (_punto >= (_temp - _baby_phase)) {
-        _place.setTexture(&_phoenix_egg);
+    _bambino_fase = _temp / 3;
+    _adulta_fase = _temp / 2;
+    if (_punto >= (_temp - _bambino_fase)) {
+        _posto.setTexture(&_fenice_uovo);
     }
-    else if (_punto >= (_temp - _adult_phase)) {
-        _place.setTexture(&_phoenix_baby);
+    else if (_punto >= (_temp - _adulta_fase)) {
+        _posto.setTexture(&_fenice_bambino);
     } else {
-        _place.setTexture(&_phoenix_adult);
+        _posto.setTexture(&_fenice_adulta);
     }
 }
 
 int Fenice::bobalino_cattolino()
 {
-    if (!_phoenix_egg.loadFromFile(_egg_path))
+    if (!_fenice_uovo.loadFromFile(_uovo_sentiero))
         return 84;
-    if (!_phoenix_baby.loadFromFile(_baby_path))
+    if (!_fenice_bambino.loadFromFile(_bambino_sentiero))
         return 84;
-    if (!_phoenix_adult.loadFromFile(_adult_path))
+    if (!_fenice_adulta.loadFromFile(_adulta_sentiero))
         return 84;
-    if (!_font.loadFromFile(_font_path))
+    if (!_font.loadFromFile(_font_sentiero))
         return 84;
-    _place.setSize(sf::Vector2f(500, 500));
-    _place.setPosition(670, 250);
-    if (_punto >= (_temp - _baby_phase)) {
-        _place.setTexture(&_phoenix_egg);
+    _posto.setSize(sf::Vector2f(500, 500));
+    _posto.setPosition(670, 250);
+    if (_punto >= (_temp - _bambino_fase)) {
+        _posto.setTexture(&_fenice_uovo);
     }
-    else if (_punto >= (_temp - _adult_phase)) {
-        _place.setTexture(&_phoenix_baby);
+    else if (_punto >= (_temp - _adulta_fase)) {
+        _posto.setTexture(&_fenice_bambino);
     } else {
-        _place.setTexture(&_phoenix_adult);
+        _posto.setTexture(&_fenice_adulta);
     }
 
-    _current_score.setFont(_font);
-    _current_score.setPosition(780, 10);
-    _current_score.setCharacterSize(100);
-    _current_score.setFillColor(sf::Color::Black);
+    _attuale_punto.setFont(_font);
+    _attuale_punto.setPosition(780, 10);
+    _attuale_punto.setCharacterSize(100);
+    _attuale_punto.setFillColor(sf::Color::Black);
     return 0;
 }
 
 
 
-void Fenice::runGame()
+void Fenice::correre()
 {
     while (_fenice.isOpen()) {
         sf::Event event;
@@ -74,18 +74,18 @@ void Fenice::runGame()
             if (event.type == sf::Event::MouseButtonPressed){
                 if (event.mouseButton.button == sf::Mouse::Left){
                     sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
-                    if (_place.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    if (_posto.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         bombardino_crocodilo();
                     }
                 }
             }
         }
         std::string scoreStr = "Score: " + std::to_string(_punto);
-        _current_score.setString(scoreStr);
+        _attuale_punto.setString(scoreStr);
         aggiornaFenice();
         _fenice.clear(sf::Color::White);
-        _fenice.draw(_place);
-        _fenice.draw(_current_score);
+        _fenice.draw(_posto);
+        _fenice.draw(_attuale_punto);
         _fenice.display();
     }
 }

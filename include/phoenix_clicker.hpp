@@ -14,11 +14,11 @@
 class Gioco {
 protected:
     long _punto;
-    long _next_score;
+    long _prossimo_punto;
     long _temp;
-    std::string _score_path;
-    std::string _next_score_path;
-    std::string _temp_path;
+    std::string _punto_sentiero;
+    std::string _prossimo_punto_sentiero;
+    std::string _temp_sentiero;
 
 
 public:

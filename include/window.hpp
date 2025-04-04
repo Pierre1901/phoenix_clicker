@@ -10,26 +10,26 @@
 
 class Fenice : Gioco {
 private:
-    std::string _egg_path;
-    std::string _baby_path;
-    std::string _adult_path;
-    std::string _font_path;
+    std::string _uovo_sentiero;
+    std::string _bambino_sentiero;
+    std::string _adulta_sentiero;
+    std::string _font_sentiero;
     sf::RenderWindow _fenice;
-    sf::Texture _phoenix_egg;
-    sf::Texture _phoenix_baby;
-    sf::Texture _phoenix_adult;
-    sf::RectangleShape _place;
-    long _baby_phase;
-    long _adult_phase;
+    sf::Texture _fenice_uovo;
+    sf::Texture _fenice_bambino;
+    sf::Texture _fenice_adulta;
+    sf::RectangleShape _posto;
+    long _bambino_fase;
+    long _adulta_fase;
     sf::Font _font;
-    sf::Text _current_score;
+    sf::Text _attuale_punto;
 
 
 public:
     Fenice();
     ~Fenice();
     int bobalino_cattolino();
-    void runGame();
+    void correre();
     void aggiornaFenice();
 
 
