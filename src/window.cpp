@@ -4,37 +4,37 @@
 
 #include "../include/window.hpp"
 
-Window::Window() :  _window(sf::VideoMode(1920, 1080), "Phoenix Clicker")
+Fenice::Fenice() :  _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker")
 {
     _egg_path = "assets/egg.png";
     _baby_path = "assets/baby.png";
     _adult_path = "assets/adult.png";
     _font_path = "assets/Fireflies.otf";
-    initScore();
+    tralalero_tralala();
     _baby_phase = _temp / 3;
     _adult_phase = _temp / 2;
 }
 
-Window::~Window()
+Fenice::~Fenice()
 {
     return;
 }
 
-void Window::updatePhoenix()
+void Fenice::aggiornaFenice()
 {
     _baby_phase = _temp / 3;
     _adult_phase = _temp / 2;
-    if (_score >= (_temp - _baby_phase)) {
+    if (_punto >= (_temp - _baby_phase)) {
         _place.setTexture(&_phoenix_egg);
     }
-    else if (_score >= (_temp - _adult_phase)) {
+    else if (_punto >= (_temp - _adult_phase)) {
         _place.setTexture(&_phoenix_baby);
     } else {
         _place.setTexture(&_phoenix_adult);
     }
 }
 
-int Window::initWindow()
+int Fenice::bobalino_cattolino()
 {
     if (!_phoenix_egg.loadFromFile(_egg_path))
         return 84;
@@ -46,10 +46,10 @@ int Window::initWindow()
         return 84;
     _place.setSize(sf::Vector2f(500, 500));
     _place.setPosition(670, 250);
-    if (_score >= (_temp - _baby_phase)) {
+    if (_punto >= (_temp - _baby_phase)) {
         _place.setTexture(&_phoenix_egg);
     }
-    else if (_score >= (_temp - _adult_phase)) {
+    else if (_punto >= (_temp - _adult_phase)) {
         _place.setTexture(&_phoenix_baby);
     } else {
         _place.setTexture(&_phoenix_adult);
@@ -64,28 +64,28 @@ int Window::initWindow()
 
 
 
-void Window::runGame()
+void Fenice::runGame()
 {
-    while (_window.isOpen()) {
+    while (_fenice.isOpen()) {
         sf::Event event;
-        while (_window.pollEvent(event)) {
+        while (_fenice.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-                _window.close();
+                _fenice.close();
             if (event.type == sf::Event::MouseButtonPressed){
                 if (event.mouseButton.button == sf::Mouse::Left){
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
                     if (_place.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        reduceScore();
+                        bombardino_crocodilo();
                     }
                 }
             }
         }
-        std::string scoreStr = "Score: " + std::to_string(_score);
+        std::string scoreStr = "Score: " + std::to_string(_punto);
         _current_score.setString(scoreStr);
-        updatePhoenix();
-        _window.clear(sf::Color::White);
-        _window.draw(_place);
-        _window.draw(_current_score);
-        _window.display();
+        aggiornaFenice();
+        _fenice.clear(sf::Color::White);
+        _fenice.draw(_place);
+        _fenice.draw(_current_score);
+        _fenice.display();
     }
 }

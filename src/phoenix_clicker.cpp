@@ -4,38 +4,38 @@
 
 #include "../include/phoenix_clicker.hpp"
 
-Game::Game()
+Gioco::Gioco()
 {
     _score_path = "setter/score.txt";
     _next_score_path = "setter/next_score.txt";
     _temp_path = "setter/temp.txt";
-    _score = 0;
+    _punto = 0;
     _temp = 0;
     _next_score = 0;
 }
 
-Game::~Game()
+Gioco::~Gioco()
 {
 
 }
 
-void Game::reduceScore()
+void Gioco::bombardino_crocodilo()
 {
-    _score = _score - 1;
+    _punto = _punto - 1;
     std::ofstream score_file(_score_path);
-    if (_score == 0){
+    if (_punto == 0){
         std::ofstream next_score_file(_next_score_path);
         std::ofstream temp_file(_temp_path);
         _next_score = _temp * 1.5;
-        _score = _next_score;
+        _punto = _next_score;
         _temp = _next_score;
         next_score_file << _next_score;
         temp_file << _temp;
     }
-    score_file << _score;
+    score_file << _punto;
 }
 
-int Game::initScore()
+int Gioco::tralalero_tralala()
 {
     std::ifstream score_file(_score_path);
     std::ifstream next_score_file(_next_score_path);
@@ -43,7 +43,7 @@ int Game::initScore()
 
     if (!score_file || !next_score_file || !temp_file)
         return 84;
-    if (!(score_file >> _score))
+    if (!(score_file >> _punto))
         return 84;
     if (!(next_score_file >> _next_score))
         return 84;

@@ -11,9 +11,9 @@
 #include <fstream>
 
 
-class Game {
+class Gioco {
 protected:
-    long _score;
+    long _punto;
     long _next_score;
     long _temp;
     std::string _score_path;
@@ -22,10 +22,10 @@ protected:
 
 
 public:
-    Game();
-    ~Game();
-    int initScore();
-    void reduceScore();
+    Gioco();
+    ~Gioco();
+    int tralalero_tralala();
+    void bombardino_crocodilo();
 };
 
 
