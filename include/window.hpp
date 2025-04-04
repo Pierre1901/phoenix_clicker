@@ -13,6 +13,7 @@ private:
     std::string _egg_path;
     std::string _baby_path;
     std::string _adult_path;
+    std::string _font_path;
     sf::RenderWindow _window;
     sf::Texture _phoenix_egg;
     sf::Texture _phoenix_baby;
@@ -20,6 +21,8 @@ private:
     sf::RectangleShape _place;
     long _baby_phase;
     long _adult_phase;
+    sf::Font _font;
+    sf::Text _current_score;
 
 
 public:
@@ -27,6 +30,7 @@ public:
     ~Window();
     int initWindow();
     void runGame();
+    void updatePhoenix();
 
 
 };
