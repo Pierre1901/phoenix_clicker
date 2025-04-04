@@ -12,7 +12,7 @@
 
 
 class Game {
-private:
+protected:
     long _score;
     long _next_score;
     long _temp;
