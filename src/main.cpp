@@ -11,14 +11,13 @@
 
 int main(int argc, char **argv)
 {
-    Game game;
+    Gioco gioco;
 
-
-    if (game.initScore() == 84)
+    if (gioco.tralalero_tralala() == 84)
         return 84;
-    Window window;
-    if (window.initWindow() == 84)
+    Fenice fenice;
+    if (fenice.bobalino_cattolino() == 84)
         return 84;
-    window.runGame();
+    fenice.correre();
     return 0;
 }

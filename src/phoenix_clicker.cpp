@@ -4,48 +4,48 @@
 
 #include "../include/phoenix_clicker.hpp"
 
-Game::Game()
+Gioco::Gioco()
 {
-    _score_path = "setter/score.txt";
-    _next_score_path = "setter/next_score.txt";
-    _temp_path = "setter/temp.txt";
-    _score = 0;
+    _punto_sentiero = "setter/score.txt";
+    _prossimo_punto_sentiero = "setter/next_score.txt";
+    _temp_sentiero = "setter/temp.txt";
+    _punto = 0;
     _temp = 0;
-    _next_score = 0;
+    _prossimo_punto = 0;
 }
 
-Game::~Game()
+Gioco::~Gioco()
 {
 
 }
 
-void Game::reduceScore()
+void Gioco::bombardino_crocodilo()
 {
-    _score = _score - 1;
-    std::ofstream score_file(_score_path);
-    if (_score == 0){
-        std::ofstream next_score_file(_next_score_path);
-        std::ofstream temp_file(_temp_path);
-        _next_score = _temp * 1.5;
-        _score = _next_score;
-        _temp = _next_score;
-        next_score_file << _next_score;
+    _punto = _punto - 1;
+    std::ofstream punto_file(_punto_sentiero);
+    if (_punto == 0){
+        std::ofstream next_punto_file(_prossimo_punto_sentiero);
+        std::ofstream temp_file(_temp_sentiero);
+        _prossimo_punto = _temp * 1.5;
+        _punto = _prossimo_punto;
+        _temp = _prossimo_punto;
+        next_punto_file << _prossimo_punto;
         temp_file << _temp;
     }
-    score_file << _score;
+    punto_file << _punto;
 }
 
-int Game::initScore()
+int Gioco::tralalero_tralala()
 {
-    std::ifstream score_file(_score_path);
-    std::ifstream next_score_file(_next_score_path);
-    std::ifstream temp_file(_temp_path);
+    std::ifstream punto_file(_punto_sentiero);
+    std::ifstream prossimo_punto_file(_prossimo_punto_sentiero);
+    std::ifstream temp_file(_temp_sentiero);
 
-    if (!score_file || !next_score_file || !temp_file)
+    if (!punto_file || !prossimo_punto_file || !temp_file)
         return 84;
-    if (!(score_file >> _score))
+    if (!(punto_file >> _punto))
         return 84;
-    if (!(next_score_file >> _next_score))
+    if (!(prossimo_punto_file >> _prossimo_punto))
         return 84;
     if (!(temp_file >> _temp))
         return 84;
