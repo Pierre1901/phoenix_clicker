@@ -5,8 +5,14 @@
 ** main.cpp
 */
 
+#include "../include/phoenix_clicker.hpp"
+
 
 int main(int argc, char **argv)
 {
+    Game game;
+
+    if (game.initScore() == 84)
+        return 84;
     return 0;
 }
