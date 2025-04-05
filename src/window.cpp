@@ -244,15 +244,15 @@ int Fenice::bobalino_cattolino() {
     if (!_fenice_uovo.loadFromFile(_uovo_sentiero)) return 84;
     if (!_fenice_bambino.loadFromFile(_bambino_sentiero)) return 84;
     if (!_fenice_adulta.loadFromFile(_adulta_sentiero)) return 84;
+    if (!_bufferClickPosto.loadFromFile("assets/Toc.wav")) return 84;
 
+    _suonoClickPosto.setBuffer(_bufferClickPosto);
     for (int i = 0; i < 5; ++i) {
         if (!_tex_spade[i].loadFromFile(_nomi_file_spade[i])) {
             std::cerr << "ERROR: Could not load sword texture: " << _nomi_file_spade[i] << std::endl;
             return 84;
         }
     }
-
-
     _posto.setSize(sf::Vector2f(500, 500));
     _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
     _posto.setPosition(920, 500);
@@ -298,6 +298,7 @@ void Fenice::correre() {
                         gestisciClickMenu(mousePos.x, mousePos.y);
                     } else {
                         if (_posto.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            _suonoClickPosto.play();
                             bombardino_crocodilo();
                             _money = _money + 1;
                             if (!_sta_animando_click) {
@@ -311,7 +312,6 @@ void Fenice::correre() {
                 }
             }
         }
-
         if (_punti_per_secondo > 0) {
             if (_orologio_pps.getElapsedTime().asSeconds() >= 1.0f) {
                 applicaPuntiPerSecondo();

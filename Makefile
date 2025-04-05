@@ -14,7 +14,7 @@ OBJ = $(SRC:.cpp=.o)
 
 NAME = phoenix_clicker
 
-CFLAGS = -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system
+CFLAGS = -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 CC = g++
 
