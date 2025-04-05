@@ -44,6 +44,9 @@ private:
     std::vector<std::string> _nomi_file_spade;
     sf::SoundBuffer _bufferClickPosto;
     sf::Sound _suonoClickPosto;
+    sf::Texture _textureCoin;
+    std::vector<sf::Sprite> _flyingCoins;
+    sf::RectangleShape _moneda;
 
     static const long COSTO_CLICK_UPGRADE = 50;
 
