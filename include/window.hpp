@@ -9,6 +9,7 @@
 
 #include "phoenix_clicker.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 
 class Fenice : public Gioco {
@@ -41,6 +42,11 @@ private:
     std::vector<sf::RectangleShape> _bottoni_spade;
     std::vector<sf::Text> _testi_spade;
     std::vector<std::string> _nomi_file_spade;
+    sf::SoundBuffer _bufferClickPosto;
+    sf::Sound _suonoClickPosto;
+    sf::Texture _textureCoin;
+    std::vector<sf::Sprite> _flyingCoins;
+    sf::RectangleShape _moneda;
 
     static const long COSTO_CLICK_UPGRADE = 50;
 

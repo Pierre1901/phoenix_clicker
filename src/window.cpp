@@ -244,15 +244,16 @@ int Fenice::bobalino_cattolino() {
     if (!_fenice_uovo.loadFromFile(_uovo_sentiero)) return 84;
     if (!_fenice_bambino.loadFromFile(_bambino_sentiero)) return 84;
     if (!_fenice_adulta.loadFromFile(_adulta_sentiero)) return 84;
+    if (!_bufferClickPosto.loadFromFile("assets/Toc.wav")) return 84;
+    if (!_textureCoin.loadFromFile("assets/coin.png")) return 84;
 
+    _suonoClickPosto.setBuffer(_bufferClickPosto);
     for (int i = 0; i < 5; ++i) {
         if (!_tex_spade[i].loadFromFile(_nomi_file_spade[i])) {
             std::cerr << "ERROR: Could not load sword texture: " << _nomi_file_spade[i] << std::endl;
             return 84;
         }
     }
-
-
     _posto.setSize(sf::Vector2f(500, 500));
     _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
     _posto.setPosition(920, 500);
@@ -266,14 +267,16 @@ int Fenice::bobalino_cattolino() {
     _attuale_punto.setString("Score: " + std::to_string(_punto));
 
     _money_text.setFont(_font);
-    _money_text.setPosition(10, 10);
+    _money_text.setPosition(70, 10);
     _money_text.setCharacterSize(50);
     _money_text.setFillColor(sf::Color::Black);
-    _money_text.setString("Money: " + std::to_string(_money));
+    //_money_text.setString(std::to_string(_money));
+    _moneda.setPosition(10, 20);
+    _moneda.setTexture(&_textureCoin);
+    _moneda.setSize(sf::Vector2f(50, 50));
 
     setupMenu();
 
-    std::cout << "bobalino_cattolino completed successfully." << std::endl;
     return 0;
 }
 
@@ -298,6 +301,10 @@ void Fenice::correre() {
                         gestisciClickMenu(mousePos.x, mousePos.y);
                     } else {
                         if (_posto.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                            _suonoClickPosto.play();
+                            sf::Sprite coin(_textureCoin);
+                            coin.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                            _flyingCoins.push_back(coin);
                             bombardino_crocodilo();
                             _money = _money + 1;
                             if (!_sta_animando_click) {
@@ -311,7 +318,6 @@ void Fenice::correre() {
                 }
             }
         }
-
         if (_punti_per_secondo > 0) {
             if (_orologio_pps.getElapsedTime().asSeconds() >= 1.0f) {
                 applicaPuntiPerSecondo();
@@ -328,7 +334,7 @@ void Fenice::correre() {
 
         std::string scoreStr = "Score: " + std::to_string(_punto);
         _attuale_punto.setString(scoreStr);
-        std::string moneyStr = "Money: " + std::to_string(_money);
+        std::string moneyStr =  std::to_string(_money);
         _money_text.setString(moneyStr);
 
         if (!_sta_animando_click) {
@@ -339,6 +345,7 @@ void Fenice::correre() {
         _fenice.draw(_posto);
         _fenice.draw(_attuale_punto);
         _fenice.draw(_money_text);
+        _fenice.draw(_moneda);
 
         if (_menu_aperto) {
             _fenice.draw(_menu_sfondo);
@@ -350,6 +357,15 @@ void Fenice::correre() {
                 _fenice.draw(_bottoni_spade[i]);
                 _fenice.draw(_sprite_spade[i]);
                 _fenice.draw(_testi_spade[i]);
+            }
+        }
+        for (auto it = _flyingCoins.begin(); it != _flyingCoins.end(); ) {
+            it->move(0.f, -2.f);
+            if (it->getPosition().y < -50.f) {
+                it = _flyingCoins.erase(it);
+            } else {
+                _fenice.draw(*it);
+                it++;
             }
         }
 

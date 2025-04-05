@@ -17,7 +17,7 @@ const std::vector<DatiSpada> Gioco::DATI_SPADE = {
         {250, 3, "Pietra"},
         {1000, 10, "Diamante"},
         {5000, 30, "Netherite"},
-        {25000, 100, "Segreta"}
+        {25000, 100, "???"}
 };
 
 
