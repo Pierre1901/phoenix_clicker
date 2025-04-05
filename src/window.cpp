@@ -131,7 +131,6 @@ void Fenice::setupMenu() {
                                          currentY + (buttonHeightSpada - _sprite_spade[i].getGlobalBounds().height) / 2);
         }
 
-
         _testi_spade[i].setFont(_font);
         _testi_spade[i].setCharacterSize(22);
         _testi_spade[i].setFillColor(sf::Color::Black);
@@ -242,26 +241,21 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
 
 int Fenice::bobalino_cattolino() {
     if (!_font.loadFromFile(_font_sentiero)) return 84;
-    std::cout << "Font loaded successfully: " << _font_sentiero << std::endl;
-
     if (!_fenice_uovo.loadFromFile(_uovo_sentiero)) return 84;
-    std::cout << "Texture loaded successfully: " << _uovo_sentiero << std::endl;
     if (!_fenice_bambino.loadFromFile(_bambino_sentiero)) return 84;
-    std::cout << "Texture loaded successfully: " << _bambino_sentiero << std::endl;
     if (!_fenice_adulta.loadFromFile(_adulta_sentiero)) return 84;
-    std::cout << "Texture loaded successfully: " << _adulta_sentiero << std::endl;
 
     for (int i = 0; i < 5; ++i) {
         if (!_tex_spade[i].loadFromFile(_nomi_file_spade[i])) {
             std::cerr << "ERROR: Could not load sword texture: " << _nomi_file_spade[i] << std::endl;
             return 84;
         }
-        std::cout << "Sword Texture loaded successfully: " << _nomi_file_spade[i] << std::endl;
     }
 
 
     _posto.setSize(sf::Vector2f(500, 500));
-    _posto.setPosition(670, 250);
+    _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
+    _posto.setPosition(920, 500);
     _posto.setScale(_scala_originale_posto);
     aggiornaFenice();
 
