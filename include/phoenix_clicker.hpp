@@ -1,9 +1,3 @@
-/*
-** EPITECH PROJECT, 2025
-** phoenix_clicker
-** File description:
-** phoenix_clicker
-*/
 #ifndef PHOENIX_CLICKER_PHOENIX_CLICKER_HPP
 #define PHOENIX_CLICKER_PHOENIX_CLICKER_HPP
 
@@ -29,6 +23,7 @@ protected:
     std::string _punto_sentiero;
     std::string _prossimo_punto_sentiero;
     std::string _temp_sentiero;
+    std::string _progresso_sentiero; // Nuovo: Percorso file salvataggio
 
     long _click_potenza;
     long _punti_per_secondo;
@@ -42,6 +37,7 @@ public:
     Gioco();
     ~Gioco();
     int tralalero_tralala();
+    void salvaProgresso();
     void bombardino_crocodilo();
     void applicaPuntiPerSecondo();
     int getLivelloSpada() const;

@@ -1,14 +1,10 @@
-/*
-** EPITECH PROJECT, 2025
-** phoenix_clicker
-** File description:
-** window
-*/
 #include "../include/window.hpp"
 #include <string>
 #include <iostream>
 #include <filesystem>
 #include <vector>
+#include <SFML/Audio.hpp>
+#include <cmath> // Aggiunto per sicurezza
 
 const long Fenice::COSTO_CLICK_UPGRADE;
 const float Fenice::DURATA_ANIMAZIONE_CLICK = 0.15f;
@@ -18,24 +14,26 @@ Fenice::Fenice() : _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker") {
     _bambino_sentiero = "assets/baby.png";
     _adulta_sentiero = "assets/adult.png";
     _font_sentiero = "assets/Fireflies.otf";
-    _menu_aperto = false;
-    _sta_animando_click = false;
-
     _nomi_file_spade = {
             "assets/wood.png", "assets/stone.png", "assets/diamond.png",
             "assets/netherite.png", "assets/secret.png"
     };
+
+    _menu_aperto = false;
+    _sta_animando_click = false;
+    _scala_originale_posto = {1.0f, 1.0f};
+
     _tex_spade.resize(5);
     _sprite_spade.resize(5);
     _bottoni_spade.resize(5);
     _testi_spade.resize(5);
 
-
     if (tralalero_tralala() == 84) {
-        std::cerr << "Error initializing game data from files!" << std::endl;
+        std::cerr << "ERRORE CRITICO durante il caricamento iniziale!" << std::endl;
         _punto = 10; _prossimo_punto = 10; _temp = 10;
         _money = 0; _click_potenza = 1; _punti_per_secondo = 0;
         setLivelloSpada(0);
+        salvaProgresso();
     }
 
     if (_temp <= 0) _temp = 10;
@@ -43,10 +41,11 @@ Fenice::Fenice() : _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker") {
     _adulta_fase = _temp / 2;
 
     _orologio_pps.restart();
-    _scala_originale_posto = {1.0f, 1.0f};
 }
 
-Fenice::~Fenice() {}
+Fenice::~Fenice() {
+    salvaProgresso();
+}
 
 void Fenice::aggiornaFenice() {
     if (_temp <= 0) _temp = 1;
@@ -194,10 +193,7 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
         if (_money >= COSTO_CLICK_UPGRADE) {
             _money -= COSTO_CLICK_UPGRADE;
             _click_potenza += 1;
-            std::cout << "Upgrade Click Potenza acquistato! Nuova potenza base: " << _click_potenza << std::endl;
             aggiornaTestoBottoni();
-        } else {
-            std::cout << "Non abbastanza money per Potenza Click!" << std::endl;
         }
         return;
     }
@@ -206,10 +202,7 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
         if (_money >= costo_pps) {
             _money -= costo_pps;
             _punti_per_secondo += 1;
-            std::cout << "Upgrade Punti Passivi acquistato! Punti/sec: " << _punti_per_secondo << std::endl;
             aggiornaTestoBottoni();
-        } else {
-            std::cout << "Non abbastanza money per Punti Passivi!" << std::endl;
         }
         return;
     }
@@ -223,15 +216,8 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
                 if (_money >= dati.costo) {
                     _money -= dati.costo;
                     setLivelloSpada(livello_da_acquistare);
-                    std::cout << "Acquistata Spada: " << dati.nome << std::endl;
                     aggiornaTestoBottoni();
-                } else {
-                    std::cout << "Non abbastanza money per: " << dati.nome << std::endl;
                 }
-            } else if (livello_attuale_spada >= livello_da_acquistare) {
-                std::cout << "Spada " << Gioco::getDatiSpada(livello_da_acquistare).nome << " gia' acquistata." << std::endl;
-            } else {
-                std::cout << "Devi prima acquistare la spada precedente." << std::endl;
             }
             return;
         }
@@ -244,16 +230,22 @@ int Fenice::bobalino_cattolino() {
     if (!_fenice_uovo.loadFromFile(_uovo_sentiero)) return 84;
     if (!_fenice_bambino.loadFromFile(_bambino_sentiero)) return 84;
     if (!_fenice_adulta.loadFromFile(_adulta_sentiero)) return 84;
-    if (!_bufferClickPosto.loadFromFile("assets/Toc.wav")) return 84;
-    if (!_textureCoin.loadFromFile("assets/coin.png")) return 84;
+    if (!_bufferClickPosto.loadFromFile("assets/Toc.wav")) {
+        std::cerr << "WARNING: Cannot load sound: assets/Toc.wav" << std::endl;
+    } else {
+        _suonoClickPosto.setBuffer(_bufferClickPosto);
+    }
+    if (!_textureCoin.loadFromFile("assets/coin.png")) {
+        std::cerr << "WARNING: Cannot load texture: assets/coin.png" << std::endl;
+    }
 
-    _suonoClickPosto.setBuffer(_bufferClickPosto);
     for (int i = 0; i < 5; ++i) {
         if (!_tex_spade[i].loadFromFile(_nomi_file_spade[i])) {
             std::cerr << "ERROR: Could not load sword texture: " << _nomi_file_spade[i] << std::endl;
             return 84;
         }
     }
+
     _posto.setSize(sf::Vector2f(500, 500));
     _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
     _posto.setPosition(920, 500);
@@ -264,15 +256,18 @@ int Fenice::bobalino_cattolino() {
     _attuale_punto.setPosition(780, 10);
     _attuale_punto.setCharacterSize(100);
     _attuale_punto.setFillColor(sf::Color::Black);
-    _attuale_punto.setString("Score: " + std::to_string(_punto));
 
     _money_text.setFont(_font);
     _money_text.setPosition(70, 10);
     _money_text.setCharacterSize(50);
     _money_text.setFillColor(sf::Color::Black);
-    //_money_text.setString(std::to_string(_money));
+
     _moneda.setPosition(10, 20);
-    _moneda.setTexture(&_textureCoin);
+    if (_textureCoin.getSize().x > 0) {
+        _moneda.setTexture(&_textureCoin);
+    } else {
+        _moneda.setFillColor(sf::Color::Yellow);
+    }
     _moneda.setSize(sf::Vector2f(50, 50));
 
     setupMenu();
@@ -284,8 +279,10 @@ void Fenice::correre() {
     while (_fenice.isOpen()) {
         sf::Event event;
         while (_fenice.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
+                salvaProgresso();
                 _fenice.close();
+            }
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::M) {
@@ -301,10 +298,17 @@ void Fenice::correre() {
                         gestisciClickMenu(mousePos.x, mousePos.y);
                     } else {
                         if (_posto.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-                            _suonoClickPosto.play();
-                            sf::Sprite coin(_textureCoin);
-                            coin.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-                            _flyingCoins.push_back(coin);
+                            if (_suonoClickPosto.getBuffer()) _suonoClickPosto.play();
+
+                            if (_textureCoin.getSize().x > 0) {
+                                sf::Sprite coin(_textureCoin);
+                                coin.setOrigin(static_cast<float>(_textureCoin.getSize().x) / 2.f,
+                                               static_cast<float>(_textureCoin.getSize().y) / 2.f);
+                                coin.setPosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                                coin.setScale(2, 2);
+                                _flyingCoins.push_back(coin);
+                            }
+
                             bombardino_crocodilo();
                             _money = _money + 1;
                             if (!_sta_animando_click) {
@@ -318,6 +322,7 @@ void Fenice::correre() {
                 }
             }
         }
+
         if (_punti_per_secondo > 0) {
             if (_orologio_pps.getElapsedTime().asSeconds() >= 1.0f) {
                 applicaPuntiPerSecondo();
@@ -359,13 +364,16 @@ void Fenice::correre() {
                 _fenice.draw(_testi_spade[i]);
             }
         }
-        for (auto it = _flyingCoins.begin(); it != _flyingCoins.end(); ) {
-            it->move(0.f, -2.f);
-            if (it->getPosition().y < -50.f) {
+
+        for (auto it = _flyingCoins.begin(); it != _flyingCoins.end();) {
+            float verticalSpeed = -1.0f;
+            it->move(0.f, verticalSpeed);
+
+            if (it->getPosition().y + it->getGlobalBounds().height < 0) {
                 it = _flyingCoins.erase(it);
             } else {
                 _fenice.draw(*it);
-                it++;
+                ++it;
             }
         }
 

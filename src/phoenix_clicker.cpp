@@ -25,6 +25,7 @@ Gioco::Gioco() {
     _punto_sentiero = "setter/score.txt";
     _prossimo_punto_sentiero = "setter/next_score.txt";
     _temp_sentiero = "setter/temp.txt";
+    _progresso_sentiero = "setter/upgrades.txt"; // Inizializza percorso save file
     _punto = 0;
     _temp = 0;
     _prossimo_punto = 0;
@@ -96,43 +97,56 @@ void Gioco::applicaPuntiPerSecondo() {
     if (_punti_per_secondo <= 0 || _punto <= 0) {
         return;
     }
-    _punto -= _punti_per_secondo;
     _money += _punti_per_secondo;
+    _punto -= _punti_per_secondo;
     if (_punto < 0) _punto = 0;
-    bombardino_crocodilo();
+}
+
+void Gioco::salvaProgresso() {
+    std::ofstream save_file(_progresso_sentiero);
+    if (!save_file.is_open()) {
+        std::cerr << "ERRORE: Impossibile aprire il file di salvataggio: " << _progresso_sentiero << std::endl;
+        return;
+    }
+    save_file << _click_potenza << std::endl;
+    save_file << _punti_per_secondo << std::endl;
+    save_file << _livello_spada << std::endl;
+    save_file << _money << std::endl; // Salva anche i soldi
+
+    if (save_file.fail()) {
+        std::cerr << "ERRORE: Scrittura fallita nel file di salvataggio: " << _progresso_sentiero << std::endl;
+    } else {
+        std::cout << "Progresso salvato in " << _progresso_sentiero << std::endl;
+    }
+    save_file.close();
 }
 
 int Gioco::tralalero_tralala() {
-    bool success = true;
+    bool score_files_ok = true;
     long default_start_score = 10;
 
     try {
         if (!std::filesystem::exists("setter")) {
-            std::cout << "Creating directory: setter" << std::endl;
             std::filesystem::create_directory("setter");
         }
     } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Filesystem error checking/creating setter directory: " << e.what() << std::endl;
     }
 
     std::ifstream punto_file(_punto_sentiero);
     if (!punto_file.is_open() || !(punto_file >> _punto)) {
-        _punto = default_start_score;
-        success = false;
+        _punto = default_start_score; score_files_ok = false;
     }
     if(punto_file.is_open()) punto_file.close();
 
     std::ifstream prossimo_punto_file(_prossimo_punto_sentiero);
     if (!prossimo_punto_file.is_open() || !(prossimo_punto_file >> _prossimo_punto)) {
-        _prossimo_punto = default_start_score;
-        success = false;
+        _prossimo_punto = default_start_score; score_files_ok = false;
     }
     if(prossimo_punto_file.is_open()) prossimo_punto_file.close();
 
     std::ifstream temp_file(_temp_sentiero);
     if (!temp_file.is_open() || !(temp_file >> _temp)) {
-        _temp = default_start_score;
-        success = false;
+        _temp = default_start_score; score_files_ok = false;
     }
     if(temp_file.is_open()) temp_file.close();
 
@@ -140,21 +154,39 @@ int Gioco::tralalero_tralala() {
     if (_temp <= 0) _temp = _prossimo_punto;
     if (_punto <= 0) _punto = _prossimo_punto;
 
-    _livello_spada = 0;
+    if (!score_files_ok) {
+        std::ofstream out_punto(_punto_sentiero); if(out_punto.is_open()) out_punto << _punto;
+        std::ofstream out_prossimo(_prossimo_punto_sentiero); if(out_prossimo.is_open()) out_prossimo << _prossimo_punto;
+        std::ofstream out_temp(_temp_sentiero); if(out_temp.is_open()) out_temp << _temp;
+    }
+
     _click_potenza = 1;
     _punti_per_secondo = 0;
+    _livello_spada = 0;
+    _money = 0;
 
-    if (!success) {
-        std::ofstream out_punto(_punto_sentiero);
-        if(out_punto.is_open()) out_punto << _punto;
-        std::ofstream out_prossimo(_prossimo_punto_sentiero);
-        if(out_prossimo.is_open()) out_prossimo << _prossimo_punto;
-        std::ofstream out_temp(_temp_sentiero);
-        if(out_temp.is_open()) out_temp << _temp;
+    std::ifstream load_file(_progresso_sentiero);
+    if (load_file.is_open()) {
+        long temp_click, temp_pps, temp_money;
+        int temp_spada;
+
+        if (load_file >> temp_click >> temp_pps >> temp_spada >> temp_money) {
+            _click_potenza = temp_click;
+            _punti_per_secondo = temp_pps;
+            _livello_spada = temp_spada;
+            _money = temp_money;
+            std::cout << "Progresso caricato da " << _progresso_sentiero << std::endl;
+        } else {
+            std::cerr << "ATTENZIONE: Lettura fallita dal file di salvataggio: " << _progresso_sentiero << ". Uso valori di default." << std::endl;
+        }
+        load_file.close();
+    } else {
+        std::cout << "File di salvataggio " << _progresso_sentiero << " non trovato. Inizio nuova partita." << std::endl;
     }
 
     return 0;
 }
+
 
 int Gioco::getLivelloSpada() const {
     return _livello_spada;
