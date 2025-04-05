@@ -24,12 +24,12 @@ void Gioco::bombardino_crocodilo()
     _punto = _punto - 1;
     std::ofstream punto_file(_punto_sentiero);
     if (_punto == 0){
-        std::ofstream next_punto_file(_prossimo_punto_sentiero);
+        std::ofstream prossimo_punto_file(_prossimo_punto_sentiero);
         std::ofstream temp_file(_temp_sentiero);
         _prossimo_punto = _temp * 1.5;
         _punto = _prossimo_punto;
         _temp = _prossimo_punto;
-        next_punto_file << _prossimo_punto;
+        prossimo_punto_file << _prossimo_punto;
         temp_file << _temp;
     }
     punto_file << _punto;

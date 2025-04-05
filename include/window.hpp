@@ -13,16 +13,19 @@ private:
     std::string _uovo_sentiero;
     std::string _bambino_sentiero;
     std::string _adulta_sentiero;
+    std::string _coniare_sentiero;
     std::string _font_sentiero;
     sf::RenderWindow _fenice;
     sf::Texture _fenice_uovo;
     sf::Texture _fenice_bambino;
     sf::Texture _fenice_adulta;
+    sf::Texture _coniare_real;
     sf::RectangleShape _posto;
     long _bambino_fase;
     long _adulta_fase;
     sf::Font _font;
     sf::Text _attuale_punto;
+    sf::RectangleShape _coniare;
 
 
 public:

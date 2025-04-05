@@ -10,6 +10,7 @@ Fenice::Fenice() :  _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker")
     _bambino_sentiero = "assets/baby.png";
     _adulta_sentiero = "assets/adult.png";
     _font_sentiero = "assets/Fireflies.otf";
+    _coniare_sentiero = "assets/coin.png";
     tralalero_tralala();
     _bambino_fase = _temp / 3;
     _adulta_fase = _temp / 2;
@@ -44,8 +45,11 @@ int Fenice::bobalino_cattolino()
         return 84;
     if (!_font.loadFromFile(_font_sentiero))
         return 84;
+    if (!_coniare_real.loadFromFile(_coniare_sentiero))
+        return 84;
     _posto.setSize(sf::Vector2f(500, 500));
-    _posto.setPosition(670, 250);
+    _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
+    _posto.setPosition(920, 500);
     if (_punto >= (_temp - _bambino_fase)) {
         _posto.setTexture(&_fenice_uovo);
     }
@@ -59,6 +63,10 @@ int Fenice::bobalino_cattolino()
     _attuale_punto.setPosition(780, 10);
     _attuale_punto.setCharacterSize(100);
     _attuale_punto.setFillColor(sf::Color::Black);
+
+    _coniare.setSize(sf::Vector2f(32, 32));
+    _coniare.setTexture(&_coniare_real);
+    _coniare.setPosition(300, 300);
     return 0;
 }
 
@@ -75,8 +83,14 @@ void Fenice::correre()
                 if (event.mouseButton.button == sf::Mouse::Left){
                     sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
                     if (_posto.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        _posto.setScale(0.9f, 0.9f);
                         bombardino_crocodilo();
                     }
+                }
+            }
+            if (event.type == sf::Event::MouseButtonReleased){
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    _posto.setScale(1.f, 1.f);
                 }
             }
         }
@@ -86,6 +100,7 @@ void Fenice::correre()
         _fenice.clear(sf::Color::White);
         _fenice.draw(_posto);
         _fenice.draw(_attuale_punto);
+        _fenice.draw(_coniare);
         _fenice.display();
     }
 }
