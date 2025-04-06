@@ -31,6 +31,19 @@ private:
 
     bool _menu_aperto;
     sf::RectangleShape _menu_sfondo;
+    sf::Texture _menu_sfondo_texturo;
+    sf::RectangleShape _menu_shop_fondo;
+    sf::Text _shop_titulo_texto;
+
+    sf::Texture _textura_ajustes;
+    sf::Sprite _sprite_ajustes;
+
+    bool _menu_parametros_abierto = false;
+    sf::RectangleShape _fondo_parametros;
+    sf::RectangleShape _boton_parametro_1;
+    sf::Text _texto_parametro_1;
+    sf::RectangleShape _boton_parametro_2;
+    sf::Text _texto_parametro_2;
 
     sf::RectangleShape _bottone_click_upgrade;
     sf::Text _testo_click_upgrade;

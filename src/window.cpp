@@ -71,14 +71,15 @@ void Fenice::aggiornaFenice() {
 void Fenice::setupMenu() {
     float winWidth = 1920;
     float winHeight = 1080;
-    float menuWidth = 800;
-    float menuHeight = 650;
-    float menuX = (winWidth - menuWidth) / 2;
-    float menuY = (winHeight - menuHeight) / 2;
+    float menuWidth = 600;
+    float menuHeight = 1080;
+    float menuX = 0;
+    float menuY = 0;
 
     _menu_sfondo.setSize(sf::Vector2f(menuWidth, menuHeight));
     _menu_sfondo.setPosition(menuX, menuY);
-    _menu_sfondo.setFillColor(sf::Color(100, 100, 100, 220));
+    sf::Color fondo_color(0, 0, 0, 77);
+    _menu_sfondo.setFillColor(fondo_color);
     _menu_sfondo.setOutlineColor(sf::Color::Black);
     _menu_sfondo.setOutlineThickness(2);
 
@@ -87,7 +88,7 @@ void Fenice::setupMenu() {
     float buttonSpacingOrig = 20;
     float buttonXOrig1 = menuX + (menuWidth / 2 - buttonWidthOrig - buttonSpacingOrig / 2);
     float buttonXOrig2 = menuX + menuWidth / 2 + buttonSpacingOrig / 2;
-    float buttonYOrig = menuY + 30;
+    float buttonYOrig = menuY + 250;
 
     _bottone_click_upgrade.setSize(sf::Vector2f(buttonWidthOrig, buttonHeightOrig));
     _bottone_click_upgrade.setPosition(buttonXOrig1, buttonYOrig);
@@ -95,6 +96,15 @@ void Fenice::setupMenu() {
     _testo_click_upgrade.setFont(_font);
     _testo_click_upgrade.setCharacterSize(20);
     _testo_click_upgrade.setFillColor(sf::Color::Black);
+
+    _shop_titulo_texto.setFont(_font);
+    _shop_titulo_texto.setString("SHOP");
+    _shop_titulo_texto.setCharacterSize(100);
+    _shop_titulo_texto.setFillColor(sf::Color::White);
+
+    sf::FloatRect textRect = _shop_titulo_texto.getLocalBounds();
+    _shop_titulo_texto.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    _shop_titulo_texto.setPosition(_menu_sfondo.getPosition().x + _menu_sfondo.getSize().x / 2.0f, _menu_sfondo.getPosition().y + 100);
 
     _bottone_pps_upgrade.setSize(sf::Vector2f(buttonWidthOrig, buttonHeightOrig));
     _bottone_pps_upgrade.setPosition(buttonXOrig2, buttonYOrig);
@@ -246,6 +256,19 @@ int Fenice::bobalino_cattolino() {
         }
     }
 
+    if (!_textura_ajustes.loadFromFile("assets/setting.png")) {
+        std::cerr << "WARNING: Impossible de charger la texture des ajustes : assets/setting.png" << std::endl;
+        return 84;
+    }
+    _sprite_ajustes.setTexture(_textura_ajustes);
+
+    float facteur_echelle = 0.15f;
+    _sprite_ajustes.setScale(facteur_echelle, facteur_echelle);
+
+    float posX = _fenice.getSize().x - _sprite_ajustes.getGlobalBounds().width - 10;
+    float posY = 10;
+    _sprite_ajustes.setPosition(posX, posY);
+
     _posto.setSize(sf::Vector2f(500, 500));
     _posto.setOrigin(_posto.getSize().x / 2, _posto.getSize().y / 2);
     _posto.setPosition(920, 500);
@@ -255,14 +278,14 @@ int Fenice::bobalino_cattolino() {
     _attuale_punto.setFont(_font);
     _attuale_punto.setPosition(780, 10);
     _attuale_punto.setCharacterSize(100);
-    _attuale_punto.setFillColor(sf::Color::Black);
+    _attuale_punto.setFillColor(sf::Color::White);
 
     _money_text.setFont(_font);
-    _money_text.setPosition(70, 10);
+    _money_text.setPosition(1750, 50);
     _money_text.setCharacterSize(50);
-    _money_text.setFillColor(sf::Color::Black);
+    _money_text.setFillColor(sf::Color::White);
 
-    _moneda.setPosition(10, 20);
+    _moneda.setPosition(1700, 65);
     if (_textureCoin.getSize().x > 0) {
         _moneda.setTexture(&_textureCoin);
     } else {
@@ -346,7 +369,7 @@ void Fenice::correre() {
             aggiornaFenice();
         }
 
-        _fenice.clear(sf::Color::White);
+        _fenice.clear(sf::Color(50, 0, 0));
         _fenice.draw(_posto);
         _fenice.draw(_attuale_punto);
         _fenice.draw(_money_text);
@@ -354,6 +377,7 @@ void Fenice::correre() {
 
         if (_menu_aperto) {
             _fenice.draw(_menu_sfondo);
+            _fenice.draw(_shop_titulo_texto);
             _fenice.draw(_bottone_click_upgrade);
             _fenice.draw(_testo_click_upgrade);
             _fenice.draw(_bottone_pps_upgrade);
@@ -376,6 +400,13 @@ void Fenice::correre() {
                 ++it;
             }
         }
+
+//        _fenice.draw(_sprite_ajustes);
+//        sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
+//        sf::Vector2f worldPos = _fenice.mapPixelToCoords(mousePos);
+//        if (_sprite_ajustes.getGlobalBounds().contains(worldPos)) {
+//            std::cout << "¡Botón de Ajustes clicado!" << std::endl;
+//        }
 
         _fenice.display();
     }
