@@ -367,13 +367,15 @@ void Fenice::correre(Gioco gioco) {
                             gioco.salvaProgresso();
                         } else if (_boton_parametro_2.getGlobalBounds().contains(worldPos)) {
                             gioco.resetGioco();
-                            _punto = 6;
-                            _temp = 6;
-                            _prossimo_punto = 0;
+                            _punto = 10;
+                            _temp = 10;
+                            _prossimo_punto = 10;
                             _money = 0;
                             _click_potenza = 1;
                             _punti_per_secondo = 0;
                             _livello_spada = 0;
+                            salvaProgresso();
+                            bombardino_crocodilo();
                             setLivelloSpada(0);
                             aggiornaFenice();
                             aggiornaTestoBottoni();
