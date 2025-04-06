@@ -21,6 +21,7 @@ Fenice::Fenice() : _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker") {
 
     _menu_aperto = false;
     _sta_animando_click = false;
+    _menu_parametros_abierto = false;
     _scala_originale_posto = {1.0f, 1.0f};
 
     _tex_spade.resize(5);
@@ -298,7 +299,46 @@ int Fenice::bobalino_cattolino() {
     return 0;
 }
 
-void Fenice::correre() {
+void Fenice::setupMenuParametros() {
+    sf::Vector2f windowSize(static_cast<float>(_fenice.getSize().x), static_cast<float>(_fenice.getSize().y));
+
+    // Fond du menu de paramètres
+    float fondoWidth = 400.0f;
+    float fondoHeight = 300.0f;
+    _fondo_parametros.setSize(sf::Vector2f(fondoWidth, fondoHeight));
+    _fondo_parametros.setPosition((windowSize.x - fondoWidth) / 2.0f, (windowSize.y - fondoHeight) / 2.0f);
+    _fondo_parametros.setFillColor(sf::Color(50, 50, 50, 200)); // Fond semi-transparent
+
+    // Premier bouton
+    float botonWidth = 200.0f;
+    float botonHeight = 50.0f;
+    _boton_parametro_1.setSize(sf::Vector2f(botonWidth, botonHeight));
+    _boton_parametro_1.setPosition(_fondo_parametros.getPosition().x + (fondoWidth - botonWidth) / 2.0f, _fondo_parametros.getPosition().y + 50.0f);
+    _boton_parametro_1.setFillColor(sf::Color(100, 100, 100));
+
+    _texto_parametro_1.setFont(_font);
+    _texto_parametro_1.setString("SAVE");
+    _texto_parametro_1.setCharacterSize(20);
+    _texto_parametro_1.setFillColor(sf::Color::White);
+    sf::FloatRect textoBounds1 = _texto_parametro_1.getLocalBounds();
+    _texto_parametro_1.setOrigin(textoBounds1.left + textoBounds1.width / 2.0f, textoBounds1.top + textoBounds1.height / 2.0f);
+    _texto_parametro_1.setPosition(_boton_parametro_1.getPosition().x + botonWidth / 2.0f, _boton_parametro_1.getPosition().y + botonHeight / 2.0f);
+
+    // Deuxième bouton
+    _boton_parametro_2.setSize(sf::Vector2f(botonWidth, botonHeight));
+    _boton_parametro_2.setPosition(_fondo_parametros.getPosition().x + (fondoWidth - botonWidth) / 2.0f, _fondo_parametros.getPosition().y + 150.0f);
+    _boton_parametro_2.setFillColor(sf::Color(100, 100, 100));
+
+    _texto_parametro_2.setFont(_font);
+    _texto_parametro_2.setString("RESET");
+    _texto_parametro_2.setCharacterSize(20);
+    _texto_parametro_2.setFillColor(sf::Color::White);
+    sf::FloatRect textoBounds2 = _texto_parametro_2.getLocalBounds();
+    _texto_parametro_2.setOrigin(textoBounds2.left + textoBounds2.width / 2.0f, textoBounds2.top + textoBounds2.height / 2.0f);
+    _texto_parametro_2.setPosition(_boton_parametro_2.getPosition().x + botonWidth / 2.0f, _boton_parametro_2.getPosition().y + botonHeight / 2.0f);
+}
+
+void Fenice::correre(Gioco gioco) {
     while (_fenice.isOpen()) {
         sf::Event event;
         while (_fenice.pollEvent(event)) {
@@ -317,10 +357,33 @@ void Fenice::correre() {
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
-                    if (_menu_aperto) {
+                    sf::Vector2f worldPos = _fenice.mapPixelToCoords(mousePos);
+                    if (_sprite_ajustes.getGlobalBounds().contains(worldPos)) {
+                        std::cout << "yolo avant: " << _menu_parametros_abierto << std::endl;
+                        _menu_parametros_abierto = !_menu_parametros_abierto;
+                        std::cout << "yolo après: " << _menu_parametros_abierto << std::endl;
+                    } else if (_menu_parametros_abierto) {
+                        if (_boton_parametro_1.getGlobalBounds().contains(worldPos)) {
+                            gioco.salvaProgresso();
+                        } else if (_boton_parametro_2.getGlobalBounds().contains(worldPos)) {
+                            gioco.resetGioco();
+                            _punto = 0;
+                            _temp = 0;
+                            _prossimo_punto = 0;
+                            _money = 0;
+                            _click_potenza = 1;
+                            _punti_per_secondo = 0;
+                            _livello_spada = 0;
+                            aggiornaFenice();
+                            aggiornaTestoBottoni();
+                        } else if (!_fondo_parametros.getGlobalBounds().contains(worldPos)) {
+                            _menu_parametros_abierto = false;
+                        }
+                    } else if (_menu_aperto) {
                         gestisciClickMenu(mousePos.x, mousePos.y);
                     } else {
-                        if (_posto.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        if (_posto.getGlobalBounds().contains(static_cast<float>(mousePos.x),
+                                                              static_cast<float>(mousePos.y))) {
                             if (_suonoClickPosto.getBuffer()) _suonoClickPosto.play();
 
                             if (_textureCoin.getSize().x > 0) {
@@ -362,7 +425,7 @@ void Fenice::correre() {
 
         std::string scoreStr = "Score: " + std::to_string(_punto);
         _attuale_punto.setString(scoreStr);
-        std::string moneyStr =  std::to_string(_money);
+        std::string moneyStr = std::to_string(_money);
         _money_text.setString(moneyStr);
 
         if (!_sta_animando_click) {
@@ -374,6 +437,7 @@ void Fenice::correre() {
         _fenice.draw(_attuale_punto);
         _fenice.draw(_money_text);
         _fenice.draw(_moneda);
+        _fenice.draw(_sprite_ajustes); // Le bouton de settings peut être dessiné ici
 
         if (_menu_aperto) {
             _fenice.draw(_menu_sfondo);
@@ -382,11 +446,20 @@ void Fenice::correre() {
             _fenice.draw(_testo_click_upgrade);
             _fenice.draw(_bottone_pps_upgrade);
             _fenice.draw(_testo_pps_upgrade);
-            for(int i=0; i<5; ++i) {
+            for (int i = 0; i < 5; ++i) {
                 _fenice.draw(_bottoni_spade[i]);
                 _fenice.draw(_sprite_spade[i]);
                 _fenice.draw(_testi_spade[i]);
             }
+        }
+
+        // Dessiner le menu des paramètres APRÈS avoir dessiné les autres éléments
+        if (_menu_parametros_abierto) {
+            _fenice.draw(_fondo_parametros);
+            _fenice.draw(_boton_parametro_1);
+            _fenice.draw(_texto_parametro_1);
+            _fenice.draw(_boton_parametro_2);
+            _fenice.draw(_texto_parametro_2);
         }
 
         for (auto it = _flyingCoins.begin(); it != _flyingCoins.end();) {
@@ -400,13 +473,6 @@ void Fenice::correre() {
                 ++it;
             }
         }
-
-//        _fenice.draw(_sprite_ajustes);
-//        sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
-//        sf::Vector2f worldPos = _fenice.mapPixelToCoords(mousePos);
-//        if (_sprite_ajustes.getGlobalBounds().contains(worldPos)) {
-//            std::cout << "¡Botón de Ajustes clicado!" << std::endl;
-//        }
 
         _fenice.display();
     }

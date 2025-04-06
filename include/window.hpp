@@ -38,7 +38,7 @@ private:
     sf::Texture _textura_ajustes;
     sf::Sprite _sprite_ajustes;
 
-    bool _menu_parametros_abierto = false;
+    bool _menu_parametros_abierto;
     sf::RectangleShape _fondo_parametros;
     sf::RectangleShape _boton_parametro_1;
     sf::Text _texto_parametro_1;
@@ -78,8 +78,9 @@ public:
     Fenice();
     ~Fenice();
     int bobalino_cattolino();
-    void correre();
+    void correre(Gioco gioco);
     void aggiornaFenice();
+    void setupMenuParametros();
 };
 
 #endif //PHOENIX_CLICKER_WINDOW_HPP

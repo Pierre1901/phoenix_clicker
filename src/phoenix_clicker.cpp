@@ -187,6 +187,18 @@ int Gioco::tralalero_tralala() {
     return 0;
 }
 
+void Gioco::resetGioco()
+{
+    _punto = 0;
+    _temp = 0;
+    _prossimo_punto = 0;
+    _money = 0;
+    _click_potenza = 1;
+    _punti_per_secondo = 0;
+    _livello_spada = 0;
+    setLivelloSpada(0);
+    salvaProgresso();
+}
 
 int Gioco::getLivelloSpada() const {
     return _livello_spada;

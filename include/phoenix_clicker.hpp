@@ -43,6 +43,7 @@ public:
     int getLivelloSpada() const;
     void setLivelloSpada(int livello);
     static const DatiSpada& getDatiSpada(int livello);
+    void resetGioco();
 };
 
 #endif //PHOENIX_CLICKER_PHOENIX_CLICKER_HPP

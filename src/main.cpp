@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     Fenice fenice;
     if (fenice.bobalino_cattolino() == 84)
         return 84;
-    fenice.correre();
+    fenice.setupMenuParametros();
+    fenice.correre(gioco);
     return 0;
 }
