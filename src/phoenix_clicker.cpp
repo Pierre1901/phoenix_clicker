@@ -189,8 +189,8 @@ int Gioco::tralalero_tralala() {
 
 void Gioco::resetGioco()
 {
-    _punto = 0;
-    _temp = 0;
+    _punto = 6;
+    _temp = 6;
     _prossimo_punto = 0;
     _money = 0;
     _click_potenza = 1;

@@ -367,13 +367,14 @@ void Fenice::correre(Gioco gioco) {
                             gioco.salvaProgresso();
                         } else if (_boton_parametro_2.getGlobalBounds().contains(worldPos)) {
                             gioco.resetGioco();
-                            _punto = 0;
-                            _temp = 0;
+                            _punto = 6;
+                            _temp = 6;
                             _prossimo_punto = 0;
                             _money = 0;
                             _click_potenza = 1;
                             _punti_per_secondo = 0;
                             _livello_spada = 0;
+                            setLivelloSpada(0);
                             aggiornaFenice();
                             aggiornaTestoBottoni();
                         } else if (!_fondo_parametros.getGlobalBounds().contains(worldPos)) {
