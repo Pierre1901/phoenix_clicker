@@ -359,9 +359,7 @@ void Fenice::correre(Gioco gioco) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(_fenice);
                     sf::Vector2f worldPos = _fenice.mapPixelToCoords(mousePos);
                     if (_sprite_ajustes.getGlobalBounds().contains(worldPos)) {
-                        std::cout << "yolo avant: " << _menu_parametros_abierto << std::endl;
                         _menu_parametros_abierto = !_menu_parametros_abierto;
-                        std::cout << "yolo après: " << _menu_parametros_abierto << std::endl;
                     } else if (_menu_parametros_abierto) {
                         if (_boton_parametro_1.getGlobalBounds().contains(worldPos)) {
                             gioco.salvaProgresso();
