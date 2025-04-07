@@ -27,7 +27,7 @@ private:
     long _adulta_fase;
     sf::Font _font;
     sf::Text _attuale_punto;
-    sf::Text _money_text;
+    sf::Text _moneda_text;
 
     bool _menu_aperto;
     sf::RectangleShape _menu_sfondo;
@@ -59,7 +59,7 @@ private:
     sf::Sound _suonoClickPosto;
     sf::Texture _textureCoin;
     std::vector<sf::Sprite> _flyingCoins;
-    sf::RectangleShape _moneda;
+    sf::RectangleShape _monedaIconShape;;
 
     static const long COSTO_CLICK_UPGRADE = 50;
 

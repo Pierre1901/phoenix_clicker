@@ -29,7 +29,7 @@ Gioco::Gioco() {
     _punto = 0;
     _temp = 0;
     _prossimo_punto = 0;
-    _money = 0;
+    _moneda = 0;
     _click_potenza = 1;
     _punti_per_secondo = 0;
     _livello_spada = 0;
@@ -97,7 +97,7 @@ void Gioco::applicaPuntiPerSecondo() {
     if (_punti_per_secondo <= 0 || _punto <= 0) {
         return;
     }
-    _money += _punti_per_secondo;
+    _moneda += _punti_per_secondo;
     _punto -= _punti_per_secondo;
     if (_punto < 0) _punto = 0;
 }
@@ -111,7 +111,7 @@ void Gioco::salvaProgresso() {
     save_file << _click_potenza << std::endl;
     save_file << _punti_per_secondo << std::endl;
     save_file << _livello_spada << std::endl;
-    save_file << _money << std::endl; // Salva anche i soldi
+    save_file << _moneda << std::endl; // Salva anche i soldi
 
     if (save_file.fail()) {
         std::cerr << "ERRORE: Scrittura fallita nel file di salvataggio: " << _progresso_sentiero << std::endl;
@@ -163,18 +163,18 @@ int Gioco::tralalero_tralala() {
     _click_potenza = 1;
     _punti_per_secondo = 0;
     _livello_spada = 0;
-    _money = 0;
+    _moneda = 0;
 
     std::ifstream load_file(_progresso_sentiero);
     if (load_file.is_open()) {
-        long temp_click, temp_pps, temp_money;
+        long temp_click, temp_pps, temp_moneda;
         int temp_spada;
 
-        if (load_file >> temp_click >> temp_pps >> temp_spada >> temp_money) {
+        if (load_file >> temp_click >> temp_pps >> temp_spada >> temp_moneda) {
             _click_potenza = temp_click;
             _punti_per_secondo = temp_pps;
             _livello_spada = temp_spada;
-            _money = temp_money;
+            _moneda = temp_moneda;
             std::cout << "Progresso caricato da " << _progresso_sentiero << std::endl;
         } else {
             std::cerr << "ATTENZIONE: Lettura fallita dal file di salvataggio: " << _progresso_sentiero << ". Uso valori di default." << std::endl;

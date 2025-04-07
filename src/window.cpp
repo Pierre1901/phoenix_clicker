@@ -32,7 +32,7 @@ Fenice::Fenice() : _fenice(sf::VideoMode(1920, 1080), "Phoenix Clicker") {
     if (tralalero_tralala() == 84) {
         std::cerr << "ERRORE CRITICO durante il caricamento iniziale!" << std::endl;
         _punto = 10; _prossimo_punto = 10; _temp = 10;
-        _money = 0; _click_potenza = 1; _punti_per_secondo = 0;
+        _moneda = 0; _click_potenza = 1; _punti_per_secondo = 0;
         setLivelloSpada(0);
         salvaProgresso();
     }
@@ -158,7 +158,7 @@ void Fenice::aggiornaTestoBottoni() {
     _testo_click_upgrade.setPosition(_bottone_click_upgrade.getPosition().x + _bottone_click_upgrade.getSize().x/2.0f,
                                      _bottone_click_upgrade.getPosition().y + _bottone_click_upgrade.getSize().y/2.0f);
 
-    std::string ppsText = "Punti Passivi (+1/sec)\nCosto: " + std::to_string(100) + " Money (Attuale: " + std::to_string(_punti_per_secondo) + ")";
+    std::string ppsText = "Punti Passivi (+1/sec)\nCosto: " + std::to_string(100) + " moneda (Attuale: " + std::to_string(_punti_per_secondo) + ")";
     _testo_pps_upgrade.setString(ppsText);
     textRect = _testo_pps_upgrade.getLocalBounds();
     _testo_pps_upgrade.setOrigin(textRect.left + textRect.width/2.0f, textRect.top + textRect.height/2.0f);
@@ -179,8 +179,8 @@ void Fenice::aggiornaTestoBottoni() {
             testo_spada = dati.nome + "\nAcquistata (Bonus: +" + std::to_string(dati.bonus_click) + ")";
             colore_bottone = sf::Color(100, 255, 100);
         } else if (livello_attuale_spada == livello_bottone - 1) {
-            testo_spada = "Acquista " + dati.nome + "\nCosto: " + std::to_string(dati.costo) + " Money (Bonus: +" + std::to_string(dati.bonus_click) + ")";
-            if (_money >= dati.costo) {
+            testo_spada = "Acquista " + dati.nome + "\nCosto: " + std::to_string(dati.costo) + " moneda (Bonus: +" + std::to_string(dati.bonus_click) + ")";
+            if (_moneda >= dati.costo) {
                 colore_bottone = sf::Color(255, 255, 150);
             } else {
                 colore_bottone = sf::Color(255, 150, 150);
@@ -201,8 +201,8 @@ void Fenice::aggiornaTestoBottoni() {
 
 void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
     if (_bottone_click_upgrade.getGlobalBounds().contains(static_cast<float>(mouseX), static_cast<float>(mouseY))) {
-        if (_money >= COSTO_CLICK_UPGRADE) {
-            _money -= COSTO_CLICK_UPGRADE;
+        if (_moneda >= COSTO_CLICK_UPGRADE) {
+            _moneda -= COSTO_CLICK_UPGRADE;
             _click_potenza += 1;
             aggiornaTestoBottoni();
         }
@@ -210,8 +210,8 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
     }
     else if (_bottone_pps_upgrade.getGlobalBounds().contains(static_cast<float>(mouseX), static_cast<float>(mouseY))) {
         long costo_pps = 100;
-        if (_money >= costo_pps) {
-            _money -= costo_pps;
+        if (_moneda >= costo_pps) {
+            _moneda -= costo_pps;
             _punti_per_secondo += 1;
             aggiornaTestoBottoni();
         }
@@ -224,8 +224,8 @@ void Fenice::gestisciClickMenu(int mouseX, int mouseY) {
             int livello_da_acquistare = i + 1;
             if (livello_attuale_spada == livello_da_acquistare - 1) {
                 const DatiSpada& dati = Gioco::getDatiSpada(livello_da_acquistare);
-                if (_money >= dati.costo) {
-                    _money -= dati.costo;
+                if (_moneda >= dati.costo) {
+                    _moneda -= dati.costo;
                     setLivelloSpada(livello_da_acquistare);
                     aggiornaTestoBottoni();
                 }
@@ -281,18 +281,18 @@ int Fenice::bobalino_cattolino() {
     _attuale_punto.setCharacterSize(100);
     _attuale_punto.setFillColor(sf::Color::White);
 
-    _money_text.setFont(_font);
-    _money_text.setPosition(1750, 50);
-    _money_text.setCharacterSize(50);
-    _money_text.setFillColor(sf::Color::White);
+    _moneda_text.setFont(_font);
+    _moneda_text.setPosition(1750, 50);
+    _moneda_text.setCharacterSize(50);
+    _moneda_text.setFillColor(sf::Color::White);
 
-    _moneda.setPosition(1700, 65);
+    _monedaIconShape.setPosition(1700, 65);
     if (_textureCoin.getSize().x > 0) {
-        _moneda.setTexture(&_textureCoin);
+        _monedaIconShape.setTexture(&_textureCoin);
     } else {
-        _moneda.setFillColor(sf::Color::Yellow);
+        _monedaIconShape.setFillColor(sf::Color::Yellow);
     }
-    _moneda.setSize(sf::Vector2f(50, 50));
+    _monedaIconShape.setSize(sf::Vector2f(50, 50));
 
     setupMenu();
 
@@ -370,7 +370,7 @@ void Fenice::correre(Gioco gioco) {
                             _punto = 0;
                             _temp = 0;
                             _prossimo_punto = 0;
-                            _money = 0;
+                            _moneda = 0;
                             _click_potenza = 1;
                             _punti_per_secondo = 0;
                             _livello_spada = 0;
@@ -399,7 +399,7 @@ void Fenice::correre(Gioco gioco) {
                             }
 
                             bombardino_crocodilo();
-                            _money = _money + 1;
+                            _moneda = _moneda + 1;
                             if (!_sta_animando_click) {
                                 _sta_animando_click = true;
                                 _scala_originale_posto = _posto.getScale();
@@ -428,8 +428,8 @@ void Fenice::correre(Gioco gioco) {
 
         std::string scoreStr = "Score: " + std::to_string(_punto);
         _attuale_punto.setString(scoreStr);
-        std::string moneyStr = std::to_string(_money);
-        _money_text.setString(moneyStr);
+        std::string moneyStr = std::to_string(_moneda);
+        _moneda_text.setString(moneyStr);
 
         if (!_sta_animando_click) {
             aggiornaFenice();
@@ -438,9 +438,9 @@ void Fenice::correre(Gioco gioco) {
         _fenice.clear(sf::Color(50, 0, 0));
         _fenice.draw(_posto);
         _fenice.draw(_attuale_punto);
-        _fenice.draw(_money_text);
-        _fenice.draw(_moneda);
-        _fenice.draw(_sprite_ajustes); // Le bouton de settings peut être dessiné ici
+        _fenice.draw(_moneda_text);
+        _fenice.draw(_monedaIconShape);
+        _fenice.draw(_sprite_ajustes);
 
         if (_menu_aperto) {
             _fenice.draw(_menu_sfondo);

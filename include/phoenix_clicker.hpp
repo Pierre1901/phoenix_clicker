@@ -19,11 +19,11 @@ protected:
     long _punto;
     long _prossimo_punto;
     long _temp;
-    long _money;
+    long _moneda;
     std::string _punto_sentiero;
     std::string _prossimo_punto_sentiero;
     std::string _temp_sentiero;
-    std::string _progresso_sentiero; // Nuovo: Percorso file salvataggio
+    std::string _progresso_sentiero;
 
     long _click_potenza;
     long _punti_per_secondo;
