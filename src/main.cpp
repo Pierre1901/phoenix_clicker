@@ -13,6 +13,8 @@ int main(int argc, char **argv)
 {
     Gioco gioco;
 
+    std::cout << "test" << std::endl;
+
     if (gioco.tralalero_tralala() == 84)
         return 84;
     Fenice fenice;
